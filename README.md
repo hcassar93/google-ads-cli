@@ -73,7 +73,17 @@ Before using this CLI, you need:
 
 ## Installation
 
-### From Source
+### Option 1: Install from npm (Recommended)
+
+Install globally from npm:
+
+```bash
+npm install -g google-ads-cli
+```
+
+### Option 2: Install from Source
+
+Clone the repository and build locally:
 
 ```bash
 git clone https://github.com/hcassar93/google-ads-cli.git
