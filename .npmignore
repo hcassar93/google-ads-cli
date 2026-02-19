@@ -1,0 +1,18 @@
+# Exclude source files and development artifacts from npm package
+src/
+*.ts
+!*.d.ts
+tsconfig.json
+.gitignore
+.git/
+.vscode/
+.idea/
+*.log
+node_modules/
+coverage/
+.env
+*.env
+.DS_Store
+SUMMARY.txt
+audit.md
+plan.md
