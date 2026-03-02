@@ -13,11 +13,23 @@ import {
 export async function runSetup(): Promise<string> {
   console.log(chalk.bold.cyan('\n🚀 Google Ads CLI Setup\n'));
   
-  console.log(chalk.gray('Prerequisites:'));
-  console.log(chalk.gray('1. Google Cloud Project with Google Ads API enabled'));
-  console.log(chalk.gray('2. OAuth 2.0 Desktop credentials (Client ID & Secret)'));
-  console.log(chalk.gray('3. Developer Token from Google Ads API Center'));
-  console.log(chalk.gray('4. Google Ads Customer ID (10 digits, no dashes)\n'));
+  console.log(chalk.gray('Before continuing, gather these values:'));
+  console.log(chalk.gray('1. OAuth Client ID + Client Secret (Desktop app type)'));
+  console.log(chalk.gray('2. Developer Token from Google Ads API Center'));
+  console.log(chalk.gray('3. Google Ads Customer ID (10 digits, no dashes)\n'));
+
+  console.log(chalk.cyan('How to create OAuth 2.0 credentials:'));
+  console.log(chalk.gray('  1) Open: https://console.cloud.google.com/'));
+  console.log(chalk.gray('  2) APIs & Services > OAuth consent screen (create app if needed)'));
+  console.log(chalk.gray('  3) Add scope: https://www.googleapis.com/auth/adwords'));
+  console.log(chalk.gray('  4) APIs & Services > Credentials > Create Credentials > OAuth client ID'));
+  console.log(chalk.gray('  5) Choose "Desktop app" and copy Client ID + Client Secret\n'));
+
+  console.log(chalk.cyan('How to get a Developer Token:'));
+  console.log(chalk.gray('  1) Open: https://ads.google.com/'));
+  console.log(chalk.gray('  2) Tools & Settings (wrench) > Setup > API Center'));
+  console.log(chalk.gray('  3) Copy your Developer Token'));
+  console.log(chalk.gray('  Note: New tokens are usually Test mode and limited to your own accounts.\n'));
 
   const profileName = await createProfile();
 
@@ -78,17 +90,19 @@ export async function runSetup(): Promise<string> {
       name: 'login_customer_id',
       message: 'Login Customer ID (optional, for MCC accounts):',
       default: '',
-      validate: (input: string) => {
-        if (!input.trim()) return true;
-        const formatted = formatCustomerId(input);
+      validate: (input: string | undefined) => {
+        const sanitized = sanitizeInput(input ?? '');
+        if (!sanitized) return true;
+        const formatted = formatCustomerId(sanitized);
         if (!validateCustomerId(formatted)) {
           return 'Invalid Login Customer ID. Must be 10 digits.';
         }
         return true;
       },
-      filter: (input: string) => {
-        if (!input.trim()) return undefined;
-        return formatCustomerId(sanitizeInput(input));
+      filter: (input: string | undefined) => {
+        const sanitized = sanitizeInput(input ?? '');
+        if (!sanitized) return undefined;
+        return formatCustomerId(sanitized);
       }
     }
   ]);

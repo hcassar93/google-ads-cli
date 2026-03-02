@@ -26,6 +26,27 @@ export class GoogleAdsAPI {
     });
   }
 
+  private formatError(error: any, context: string): Error {
+    // Handle Google Ads API errors with structured error responses
+    if (error.errors && Array.isArray(error.errors) && error.errors.length > 0) {
+      const firstError = error.errors[0];
+      const errorCode = firstError.error_code ? Object.values(firstError.error_code)[0] : 'UNKNOWN';
+      const errorMessage = firstError.message || 'No error message provided';
+      return new Error(`${context}: ${errorCode} - ${errorMessage}`);
+    }
+    
+    // Handle errors with reason field (like SERVICE_DISABLED)
+    if (error.reason) {
+      const details = error.metadata ? JSON.stringify(error.metadata) : '';
+      return new Error(`${context}: ${error.reason}${details ? ` - ${details}` : ''}`);
+    }
+    
+    // Fallback to standard error handling
+    const errorMsg = error.cause?.message || error.message || 'Unknown error';
+    const errorDetails = error.details || error.code || '';
+    return new Error(`${context}: ${errorMsg}${errorDetails ? ` (${errorDetails})` : ''}`);
+  }
+
   async initialize(): Promise<void> {
     const profile = configManager.getProfile(this.profileName);
     if (!profile) {
@@ -71,7 +92,7 @@ export class GoogleAdsAPI {
       const results = await customer.query(query);
       return results;
     } catch (error: any) {
-      throw new Error(`Failed to list customers: ${error.message}`);
+      throw this.formatError(error, 'Failed to list customers');
     }
   }
 
@@ -100,7 +121,7 @@ export class GoogleAdsAPI {
       const results = await customer.query(query);
       return results;
     } catch (error: any) {
-      throw new Error(`Failed to list campaigns: ${error.message}`);
+      throw this.formatError(error, 'Failed to list campaigns');
     }
   }
 
@@ -131,7 +152,7 @@ export class GoogleAdsAPI {
       const results = await customer.query(query);
       return results[0] || null;
     } catch (error: any) {
-      throw new Error(`Failed to get campaign: ${error.message}`);
+      throw this.formatError(error, 'Failed to get campaign');
     }
   }
 
@@ -160,7 +181,7 @@ export class GoogleAdsAPI {
       const results = await customer.query(query);
       return results;
     } catch (error: any) {
-      throw new Error(`Failed to list ad groups: ${error.message}`);
+      throw this.formatError(error, 'Failed to list ad groups');
     }
   }
 
@@ -207,7 +228,7 @@ export class GoogleAdsAPI {
       const results = await keywordPlanIdeas.generateKeywordIdeas(request);
       return results;
     } catch (error: any) {
-      throw new Error(`Failed to generate keyword ideas: ${error.message}`);
+      throw this.formatError(error, 'Failed to generate keyword ideas');
     }
   }
 
@@ -230,7 +251,7 @@ export class GoogleAdsAPI {
       const results = await customer.query(query);
       return results;
     } catch (error: any) {
-      throw new Error(`Failed to search geo targets: ${error.message}`);
+      throw this.formatError(error, 'Failed to search geo targets');
     }
   }
 
@@ -241,7 +262,7 @@ export class GoogleAdsAPI {
       const results = await customer.query(query);
       return results;
     } catch (error: any) {
-      throw new Error(`Query failed: ${error.message}`);
+      throw this.formatError(error, 'Query failed');
     }
   }
 }
