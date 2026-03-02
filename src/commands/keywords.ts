@@ -36,7 +36,7 @@ export function registerKeywordCommands(program: Command): void {
 
         const params: any = {
           pageSize: parseInt(options.limit),
-          language: `geoTargetConstants/${options.language}`
+          language: `languageConstants/${options.language}`
         };
 
         if (keywords.length > 0) {
