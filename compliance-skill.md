@@ -1,3 +1,11 @@
+---
+name: google-ads-cli-compliance-skill
+description: Compliance and safety controls for agents operating Google Ads CLI.
+version: 1.0.0
+tools:
+  - google-ads-cli
+---
+
 # Compliance Skill: Google Ads CLI
 
 This document defines compliance guardrails for agent use of `google-ads-cli`.
@@ -117,4 +125,3 @@ google-ads-cli query "SELECT campaign.id, campaign.name FROM campaign LIMIT 10" 
 - Querying unintended client accounts
 - Running ambiguous commands without explicit profile in multi-client context
 - Returning fabricated or unverified metrics
-

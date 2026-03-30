@@ -1,3 +1,11 @@
+---
+name: google-ads-cli-skill
+description: Comprehensive operational guide for agents using Google Ads CLI.
+version: 1.0.0
+tools:
+  - google-ads-cli
+---
+
 # Google Ads CLI Skill (`google-ads-cli`)
 
 This skill trains an agent to operate `google-ads-cli` reliably in automation and agentic pipelines.
@@ -225,4 +233,3 @@ google-ads-cli query "SELECT campaign.id, campaign.name, metrics.impressions, me
 - Never commit local config/secrets.
 - Keep OAuth data local to operator machine.
 - Use least-privilege access and intended customer IDs only.
-
